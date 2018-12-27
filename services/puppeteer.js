@@ -40,5 +40,9 @@ async function initPage(url) {
   await page.goto(url, {
     waitUntil: 'networkidle2', 
   });
-  return page;
+  if (page) {
+    return page;
+  } else {
+    throw new Error('page is null')
+  }
 }
