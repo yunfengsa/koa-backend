@@ -7,8 +7,6 @@ module.exports.getFlavorCope = async function(ctx, next) {
   } catch (error) {
     ctx.body = 'error'
   }
-  
-  // await page.pdf({path: 'hn.pdf', format: 'A4'});
   await page.waitForSelector('[class="post-container"]')
   const blogPost = await page.$$('li[itemprop="blogPost"]');
   let infoList = [];
@@ -23,17 +21,16 @@ module.exports.getFlavorCope = async function(ctx, next) {
     infoList.push(info);
     await el.dispose();
   }
-  
   ctx.body = infoList;
 }
 
 
 var browser;
-
 async function initPage(url) {
   if (!browser) {
     browser = await puppeteer.launch({
-      timeout: 30000
+      timeout: 30000,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']  // 不关闭 ubuntu会失效(https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md)
     })
   }
   const page = await browser.newPage();
