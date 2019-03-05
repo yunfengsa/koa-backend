@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 
 const cacheFlavorList = {}; // 暂时不用数据库
 const cacheOverReact = {};
@@ -88,4 +89,16 @@ async function initPage(url) {
   } else {
     throw new Error('page is null')
   }
+}
+
+var cache = [];
+module.exports.getLog = async function (ctx, next) {
+  console.log();
+  if (cache.length < 10) {
+    cache.push((ctx.request.body));
+  } else {
+    fs.appendFileSync('info.txt', JSON.stringify(cache));
+    cache = [];
+  }
+  ctx.body = JSON.stringify(ctx.request.body);
 }
